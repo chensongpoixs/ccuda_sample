@@ -2,3 +2,5 @@
 /CudaRuntime/.vs
 /CudaRuntime/CudaRuntime/x64
 /CudaRuntime/CudaRuntime_kernel/x64
+/deps/OpenCV
+/build
