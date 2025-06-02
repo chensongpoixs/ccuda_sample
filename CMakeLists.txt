@@ -74,13 +74,22 @@ find_package(GLUT)
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/deps 
-     ${PROJECT_SOURCE_DIR}/deps/OpenCV/include 
+   #  ${PROJECT_SOURCE_DIR}/deps/OpenCV/include 
    # ${OpenCV_DIR}/include 
 )
+# 声明为资源文件（不影响编译）
+#target_sources(${PROJECT_NAME} PRIVATE README.md):ml-citation{ref="7" data="citationList"} 
 
-
+#file(GLOB ALL_CXX_SRCS
+#	 
+#	./README.md
+#	)
+# Source file
+# Add target for cuda_streams
+#add_executable(${PROJECT_NAME} ${ALL_CXX_SRCS})
 
 add_subdirectory (01_cuda_add)
-add_subdirectory(02_cuda_texture)
+#add_subdirectory(02_cuda_texture)
 add_subdirectory(cuda_streams)
+add_subdirectory(07_cuda_device_query)
 add_subdirectory(cuda_opengl_demo)
