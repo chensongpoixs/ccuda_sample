@@ -1,34 +1,12 @@
-cmake_minimum_required(VERSION 3.20)
-
-#list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 
 project(cuda_opengl_demo LANGUAGES C CXX CUDA)
-
-#find_package(CUDAToolkit REQUIRED)
-
+cmake_minimum_required(VERSION 3.20)
+  
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-#set(CMAKE_CUDA_ARCHITECTURES 50 52 60 61 70 72 75 80 86 87 89 90 100 101 120)
-#set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Wno-deprecated-gpu-targets")
-#if(ENABLE_CUDA_DEBUG)
-#    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -G")        # enable cuda-gdb (may significantly affect performance on some targets)
-#else()
-#    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -lineinfo") # add line information to all builds for debug tools (exclusive to -G option)
-#endif()
-
-# Include directories and libraries
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../deps)
-#
-#
-#message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}")
-#if(WIN32)
-#    set(PC_GLUT_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../deps")
-#    set(PC_GLUT_LIBRARY_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../deps/lib/x64")
-#endif()
-#
-#
-#find_package(OpenGL)
-#find_package(GLUT)
+ MESSAGE(STATUS "#########################")
+MESSAGE(STATUS "${PROJECT_NAME}")
+#MESSAGE(STATUS "#########################")
 
 # Source file
 if(${OpenGL_FOUND})
@@ -37,7 +15,7 @@ if(${OpenGL_FOUND})
             message(STATUS "Will not build sample cuda_opengl_demo - not supported on aarch64")
         else()
             # Add target for cuda_opengl_demo
-            add_executable(cuda_opengl_demo cuda_opengl_demo.cu main.cpp)
+            add_executable(cuda_opengl_demo cuda_opengl_demo.cu cuda_opengl_demo.h main.cpp)
 
             target_compile_options(cuda_opengl_demo PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--extended-lambda>)
 

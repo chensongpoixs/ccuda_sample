@@ -12,6 +12,38 @@ __global__ void addKernel(int *c, const int *a, const int *b)
     c[i] = a[i] + b[i];
 }
 
+
+//共享gpu 内存 需要同步对应cpu内存  别的线程操作cpu上内存
+//三个参数时：  <<< 线程块， 线程， 共享数据的大小>>>
+//__global__ void use_shared_memory_gpu(float* array)
+//{
+//    int i, index = threadIdx.x;
+//    float average, sum = 0.0f;
+//
+//
+//    __shared__  float sh_arr[128];
+//
+//    //同步GPU的显存
+//    sh_arr[index] = array[index];
+//   
+//    //同步cpu线程的上的数据
+//    __syncthreads(); 
+//    
+//
+//    for (i = 0; i < index; ++i)
+//    {
+//        sum += sh_arr[i];
+//    }
+//    average = sum / (index + 1.0f);
+//
+//    if (array[index] > average)
+//    {
+//        array[index] = average;
+//    }
+//    sh_arr[index] = 3.14;
+//
+//}
+#if 0
 int main()
 {
     const int arraySize = 5;
@@ -119,3 +151,4 @@ Error:
     
     return cudaStatus;
 }
+#endif 

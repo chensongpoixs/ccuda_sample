@@ -1,8 +1,9 @@
 project(cuda_streams LANGUAGES C CXX CUDA)
 cmake_minimum_required(VERSION 3.20)
 
-MESSAGE(STATUS "#########################")
 
+ MESSAGE(STATUS "#########################")
+MESSAGE(STATUS "${PROJECT_NAME}")
 
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

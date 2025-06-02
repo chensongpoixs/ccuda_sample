@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.20)
 
 MESSAGE(STATUS "#########################")
 MESSAGE(STATUS "${PROJECT_NAME}")
-MESSAGE(STATUS "#########################")
+#MESSAGE(STATUS "#########################")
 
  
 

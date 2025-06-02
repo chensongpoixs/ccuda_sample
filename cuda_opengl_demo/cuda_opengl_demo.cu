@@ -1,64 +1,45 @@
-/* Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *  * Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *  * Neither the name of NVIDIA CORPORATION nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ 
 
 // Utilities and system includes
 
 #include <helper_cuda.h>
-
-// clamp x to range [a, b]
-__device__ float clamp(float x, float a, float b) { return max(a, min(b, x)); }
-
-__device__ int clamp(int x, int a, int b) { return max(a, min(b, x)); }
-
-// convert floating point rgb color to 8-bit integer
-__device__ int rgbToInt(float r, float g, float b)
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+///////////////////////////////////////////////////////////////////////////////
+//! Simple kernel to modify vertex positions in sine wave pattern
+//! @param data  data in global memory
+///////////////////////////////////////////////////////////////////////////////
+__global__ void simple_vbo_kernel(float4* pos, unsigned int width, unsigned int height, float time)
 {
-    r = clamp(r, 0.0f, 255.0f);
-    g = clamp(g, 0.0f, 255.0f);
-    b = clamp(b, 0.0f, 255.0f);
-    return (int(b) << 16) | (int(g) << 8) | int(r);
+    unsigned int x = blockIdx.x * blockDim.x + threadIdx.x;
+    unsigned int y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    // calculate uv coordinates
+    // 计算u v 坐标
+    float u = x / (float)width;
+    float v = y / (float)height;
+    u = u * 2.0f - 1.0f;
+    v = v * 2.0f - 1.0f;
+
+    // calculate simple sine wave pattern
+    // 计算简单正弦波模式
+    float freq = 4.0f;
+    float w = sinf(u * freq + time) * cosf(v * freq + time) * 0.5f;
+
+    // write output vertex
+    pos[y * width + x] = make_float4(u, w, v, 1.0f);
 }
 
-__global__ void cudaProcess(unsigned int *g_odata, int imgw)
+
+ void launch_kernel(float4* pos, unsigned int mesh_width,
+    unsigned int mesh_height, float time)
 {
-    extern __shared__ uchar4 sdata[];
-
-    int tx = threadIdx.x;
-    int ty = threadIdx.y;
-    int bw = blockDim.x;
-    int bh = blockDim.y;
-    int x  = blockIdx.x * bw + tx;
-    int y  = blockIdx.y * bh + ty;
-
-    uchar4 c4             = make_uchar4((x & 0x20) ? 100 : 0, 0, (y & 0x20) ? 100 : 0, 0);
-    g_odata[y * imgw + x] = rgbToInt(c4.z, c4.y, c4.x);
+    // execute the kernel  线程块尺寸
+    dim3 block(8, 8, 1);
+    // 网格尺寸
+    dim3 grid(mesh_width / block.x, mesh_height / block.y, 1);
+    // <<<线程块， 多少个线程>>>
+    simple_vbo_kernel << < grid, block >> > (pos, mesh_width, mesh_height, time);
 }
 
-extern "C" void launch_cudaProcess(dim3 grid, dim3 block, int sbytes, unsigned int *g_odata, int imgw)
-{
-    cudaProcess<<<grid, block, sbytes>>>(g_odata, imgw);
-}
+

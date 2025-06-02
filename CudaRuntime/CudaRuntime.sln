@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CudaRuntime", "CudaRuntime\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CudaRuntime_kernel", "CudaRuntime_kernel\CudaRuntime_kernel.vcxproj", "{EF50E0C7-E7A4-4552-B59B-EEBFB892C6AB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CudaTexture", "CudaTexture\CudaTexture.vcxproj", "{381DF0EA-29C8-46DA-BC42-B92151DCB15A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,10 @@ Global
 		{EF50E0C7-E7A4-4552-B59B-EEBFB892C6AB}.Debug|x64.Build.0 = Debug|x64
 		{EF50E0C7-E7A4-4552-B59B-EEBFB892C6AB}.Release|x64.ActiveCfg = Release|x64
 		{EF50E0C7-E7A4-4552-B59B-EEBFB892C6AB}.Release|x64.Build.0 = Release|x64
+		{381DF0EA-29C8-46DA-BC42-B92151DCB15A}.Debug|x64.ActiveCfg = Debug|x64
+		{381DF0EA-29C8-46DA-BC42-B92151DCB15A}.Debug|x64.Build.0 = Debug|x64
+		{381DF0EA-29C8-46DA-BC42-B92151DCB15A}.Release|x64.ActiveCfg = Release|x64
+		{381DF0EA-29C8-46DA-BC42-B92151DCB15A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

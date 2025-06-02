@@ -77,10 +77,18 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <CudaCompile Include="atomics.cu" />
+    <CudaCompile Include="homework_scan.cu" />
     <CudaCompile Include="kernel.cu" />
+    <CudaCompile Include="memory.cu" />
+    <CudaCompile Include="reduce.cu" />
+    <CudaCompile Include="scan.cu" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gputimer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
