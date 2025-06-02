@@ -151,6 +151,7 @@ int main(int argc, char** argv)
     {
         return false;
     }
+    // 3. 创建CUDA环境 
     cudaGLSetGLDevice(gpuGetMaxGflopsDeviceId());
 
 
@@ -211,6 +212,7 @@ bool initGL(int* argc, char** argv)
     glutTimerFunc(REFRESH_DELAY, timerEvent, 0);
 
     // initialize necessary OpenGL extensions
+    // 版本检查 
     if (!isGLVersionSupported(2, 0))
     {
         fprintf(stderr, "ERROR: Support for necessary OpenGL extensions missing.");
@@ -222,10 +224,10 @@ bool initGL(int* argc, char** argv)
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glDisable(GL_DEPTH_TEST);
 
-    // viewport
+    // viewport   设置视口
     glViewport(0, 0, window_width, window_height);
 
-    // projection
+    // projection 坐标系
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(60.0, (GLfloat)window_width / (GLfloat)window_height, 0.1, 10.0);
@@ -275,11 +277,18 @@ void createVBO(GLuint* vbo, struct cudaGraphicsResource** vbo_res,
     assert(vbo);
 
     // create buffer object
+     //产生一个buffer ID
     glGenBuffers(1, vbo);
+    //将其设置为当前非压缩缓冲区，
+    // 如果是PBO方式，parameter1设置为GL_PIXEL_UNPACK_BUFFER，
+    // 如果是VBO方式，parameter1设置为GL_ARRAY_BUFFER
     glBindBuffer(GL_ARRAY_BUFFER, *vbo);
 
     // initialize buffer object
     unsigned int size = mesh_width * mesh_height * 4 * sizeof(float);
+    //给该缓冲区分配数据，
+    // PBO方式下，parameter1设置为GL_PIXEL_UNPACK_BUFFER，parameter2设置为图像的长度*宽度*4。
+    // VBO方式下，parameter1设置为GL_ARRAY_BUFFER，parameter2设置为顶点数*16，因为每个顶点包含3个浮点坐标(x，y，z)和4个颜色字节(RGBA)，这样一个顶点包含16B
     glBufferData(GL_ARRAY_BUFFER, size, 0, GL_DYNAMIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -327,12 +336,14 @@ void display()
     // render from the vbo
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glVertexPointer(4, GL_FLOAT, 0, 0);
-
+    //使顶点和颜色数组可用
     glEnableClientState(GL_VERTEX_ARRAY);
+   // glEnableClientState(GL_COLOR_ARRAY);
     glColor3f(1.0, 0.0, 0.0);
+    //根据顶点数据绘图，参数可以使用GL_LINES， GL_LINE_STRIP， GL_LINE_LOOP， GL_TRIANGLES，GL_TRIANGLE_STRIP， GL_TRIANGLE_FAN， GL_QUADS，GL_QUAD_STRIP，GL_POLYGON
     glDrawArrays(GL_POINTS, 0, mesh_width * mesh_height);
     glDisableClientState(GL_VERTEX_ARRAY);
-
+   // glDisableClientState(GL_COLOR_ARRAY);
     glutSwapBuffers();
 
     g_fAnim += 0.01f;

@@ -4,3 +4,5 @@
 /CudaRuntime/CudaRuntime_kernel/x64
 /deps/OpenCV
 /build
+/CudaRuntime
+/cuda-samples
